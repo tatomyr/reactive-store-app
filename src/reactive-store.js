@@ -3,7 +3,7 @@ console.warn('triggered reactive store file')
 // Store module
 export const createStore = defaults => {
   // Store
-  const store = Object.assign({}, defaults) // { ...defaults }
+  const store = { ...defaults }
   console.warn('triggered store constructor:', store)
 
   // Track each rendered component
