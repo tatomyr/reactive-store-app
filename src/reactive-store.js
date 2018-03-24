@@ -1,28 +1,41 @@
-console.warn('triggered reactive store file');
+console.warn('triggered reactive store file')
 
 // Store module
 export const createStore = defaults => {
   // Store
   const store = Object.assign({}, defaults) // { ...defaults }
-  console.warn('triggered store constructor:', store);
+  console.warn('triggered store constructor:', store)
 
+  // Track each rendered component
   let tracker = new Set([]);
 
+  // Render a Component with a stored data
+  const render = Component => {
+    const size = tracker.size
+    tracker.add(Component)
+    if (tracker.size - size) console.warn('added tracker:',tracker, Component.name, ':',Component)
+
+    return Component(store)
+  }
+
   // XXX - just for fun
-  const parseArgs = strf => {
-    const roroArgs = strf.match(/\(\{.*?\}\)/)[0]
+  const parseArgs = stringifiedFunction => {
+    const roroArgs = stringifiedFunction.match(/\(\{.*?\}\)/)[0]
     const arrayOfArgs = roroArgs.match(/(\w+,)*(\w+)/g)
     return new Set(arrayOfArgs)
   }
 
+  // Store mutation
   const dispatch = callback => {
-    let obj
-    Object.assign(store, obj = callback(store))
-    console.log('store changes:', obj);
+    const changes = callback(store)
+    Object.assign(store, changes)
+    console.log('store changes:', changes)
 
-    // TODO rewrite to be triggered for obj keys only
+    /* replacement */
+    const changedParams = Object.keys(changes)
+    /* */
+    // TODO rewrite to be triggered for changes keys only
     tracker.forEach(item => {
-      const changedParams = Object.keys(obj)
       const setOfArgs = parseArgs(item.toString())
       console.log(changedParams,[...setOfArgs],'*****', !!changedParams.filter(param => setOfArgs.has(param)), '-->',item.name,'/',document.getElementById(item.name))
       if (changedParams.filter(param => setOfArgs.has(param)).length)
@@ -32,14 +45,5 @@ export const createStore = defaults => {
     return 'TODO'
   }
 
-  // Rendering method
-  const render = Component => {
-    const size = tracker.size
-    tracker.add(Component)
-    if (tracker.size - size) console.warn('added tracker:',tracker, Component.name, ':',Component);
-
-    return Component(store)
-  }
-
-  return { dispatch, render }
+  return { render, dispatch }
 }
