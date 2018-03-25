@@ -14,28 +14,32 @@ export const createStore = defaults => {
   const tracker = {
     components: new Set([]),
     add: (Component, args) => {
-      Component.args = args
-      const prevSize = tracker.components.size
-      Component.index = prevSize
-      tracker.components.add(Component)
-      if (tracker.components.size - prevSize === 1) {
-        const { helpers } = Component
-        if (helpers) {
-          window.global.helpers = { ...window.global.helpers, [Component.name]: helpers }
-        }
-        console.warn('added tracker:',tracker, Component.name, ':',Component)
+      if (args) {
+        Component.args = args
+        // const prevSize = tracker.components.size
+        // Component.index = prevSize
+        tracker.components.add(Component)
+        console.warn('added tracker:', Component.name)
       }
-      // return prevSize
+
+      const { helpers } = Component
+      if (helpers) {
+        window.global.helpers = { ...window.global.helpers, [Component.name]: helpers }
+        console.warn('added helpers for:', Component.name)
+      }
+
+      return 'TODO'
     },
     rerender: changes => {
       const changedArgs = Object.keys(changes)
       const components = [...tracker.components]
-      // FIXME: we should not add rendering methods to tracker if it doesn't contain `args`
-      // FIXME: change rendering order!!! ???
-      components.filter(({ args }) => args && changedArgs.some(arg => args.includes(arg))).forEach(item => {
-        console.log('rerender:', item.name, item(store))
-        document.getElementById(item.name).outerHTML = item(store)
-      })
+      components
+        .filter(({ args }) => changedArgs.some(arg => args.includes(arg)))
+        .reverse() // this is for right rendering order
+        .forEach(item => {
+          console.log('rerender:', item.name, item(store))
+          document.getElementById(item.name).outerHTML = item(store)
+        })
     },
   }
 
