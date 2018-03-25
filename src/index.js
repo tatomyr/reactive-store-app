@@ -1,3 +1,4 @@
+import './style.css'
 import { App } from './App.js'
 
 // Render page
@@ -6,4 +7,6 @@ const mount = app => {
   document.querySelector('input').focus() // XXX
 }
 
-mount(App)
+(() => {
+  mount(App)
+})()

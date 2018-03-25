@@ -7,7 +7,7 @@ export const createStore = defaults => {
   console.warn('triggered store constructor:', store)
 
   // Track each rendered component
-  let tracker = new Set([]);
+  const tracker = new Set([]);
 
   // Render a Component with a stored data
   const render = Component => {
@@ -33,6 +33,8 @@ export const createStore = defaults => {
 
     /* replacement */
     const changedParams = Object.keys(changes)
+    // const componentsToRerender = [...tracker].filter(item => changedParams.includes(name))
+    // console.log(changedParams ,'---->', componentsToRerender);
     /* */
     // TODO rewrite to be triggered for changes keys only
     tracker.forEach(item => {
