@@ -1,10 +1,7 @@
-export const Li = item => `<li style="background-color: ${getRandomColor()};">${item}</li>`
+import { highlight } from './fakes.js'
 
-function getRandomColor() {
-  var letters = '0123456789ABCDEF';
-  var color = '#';
-  for (var i = 0; i < 6; i++) {
-    color += letters[Math.floor(Math.random() * 16)];
-  }
-  return color;
-}
+export const Li = item => `
+  <li ${highlight()}>
+    ${item}
+  </li>
+`

@@ -1,7 +1,8 @@
 import { dispatch } from './store-provider.js'
 import Ol from './Ol.js'
-import Counter from './Counter.js'
 import { fakeRequest } from './fakes.js'
+import Inc from './Inc.js'
+import Dec from './Dec.js'
 
 // Form submit handler
 function addItem(e) {
@@ -9,7 +10,7 @@ function addItem(e) {
   const text = e.target.text.value
   if (text.trim() === '') return null
 
-  dispatch(store => ({ loading: store.loading + 1 }))
+  dispatch(({ loading }) => ({ loading: loading + 1 }))
 
   fakeRequest().then(delay => {
     dispatch(store => ({
@@ -28,5 +29,7 @@ export const App = () => `
     <button>Add</button>
     ${Ol}
   </form>
-  ${Counter}
+  <hr />
+  ${Inc}
+  ${Dec}
 `

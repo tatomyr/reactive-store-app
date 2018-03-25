@@ -1,5 +1,7 @@
 import './style.css'
 import { App } from './App.js'
+// TODO implement helpers `global` accessability
+import { increment } from './Inc.js' // TODO
 
 // Render page
 const mount = app => {

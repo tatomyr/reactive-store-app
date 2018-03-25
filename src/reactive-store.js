@@ -9,10 +9,15 @@ export const createStore = defaults => {
   // Track each rendered component
   const tracker = {
     components: new Set([]),
-    add: Component => {
+    add: (Component, args) => {
+      Component.args = args
       const prevSize = tracker.components.size
+      Component.index = prevSize
       tracker.components.add(Component)
-      if (tracker.components.size - prevSize !== 0) console.warn('added tracker:',tracker, Component.name, ':',Component)
+      if (tracker.components.size - prevSize !== 0) {
+        console.warn('added tracker:',tracker, Component.name, ':',Component)
+      }
+      // return prevSize
     },
     rerender: changes => {
       const changedArgs = Object.keys(changes)
@@ -26,18 +31,10 @@ export const createStore = defaults => {
 
   // Render a Component with a stored data
   const render = (Component, args = []) => {
-    Component.args = args
-    tracker.add(Component)
+    tracker.add(Component, args)
 
     return Component(store)
   }
-
-  // XXX - just for fun
-  // const parseArgs = stringifiedFunction => {
-  //   const roroArgs = stringifiedFunction.match(/\(\{.*?\}\)/)[0]
-  //   const arrayOfArgs = roroArgs.match(/(\w+,)*(\w+)/g)
-  //   return new Set(arrayOfArgs)
-  // }
 
   // Store mutation
   const dispatch = callback => {

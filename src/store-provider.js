@@ -6,5 +6,6 @@ console.log('triggered store provider')
 export const { render, dispatch } = createStore({
   list: [],
   loading: 0,
-  counter: 0,
+  likes: 0,
+  dislikes: 0,
 })
