@@ -3,7 +3,7 @@ import Waiting from './Waiting.js'
 import { Li } from './Li.js'
 
 const Ol = ({ list }) => `
-  <ol id="Ol">
+  <ol>
     ${list.map(Li).join('')}
     ${Waiting}
   </ol>

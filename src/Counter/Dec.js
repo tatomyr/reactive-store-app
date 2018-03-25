@@ -5,7 +5,6 @@ const Dec = ({ dislikes }) => `
   <button
     onclick="global.helpers.Dec.decrement()"
     ${highlight()}
-    id="Dec"
   >
     ${dislikes}--
   </button>

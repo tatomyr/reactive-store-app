@@ -32,19 +32,21 @@ export const createStore = defaults => {
       const changedArgs = Object.keys(changes)
       tracker.components
         .filter(({ args }) => changedArgs.some(arg => args.includes(arg)))
-        .forEach(item => {
-          console.log('rerender:', item.name)
-          document.getElementById(item.name).outerHTML = item(store)
+        .forEach(Component => {
+          console.log('rerender:', Component.name)
+          document.getElementById(Component.name).outerHTML = wrapWithId(Component(store))(Component.name)
         })
     },
   }
 
   // Render a Component with a stored data
+  const wrapWithId = html => name => html.replace(/<[A-z]+(.|\n)*?>/, match => `${match.slice(0, -1)} id="${name}">`)
+
   const render = (Component, args) => {
     tracker.add(Component, args)
 
     if (Component.willMount) Component.willMount()
-    return Component(store)
+    return wrapWithId(Component(store))(Component.name)
   }
 
   // Store mutation
