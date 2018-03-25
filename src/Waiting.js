@@ -7,4 +7,6 @@ const Waiting = ({ loading }) => `
   </div>
 `
 
+Waiting.args = ['loading']
+
 export default render(Waiting)
