@@ -6,8 +6,9 @@ export const createStore = defaults => {
   const store = { ...defaults }
   console.log('triggered store constructor:', store)
 
-  // Global helpers
+  // Global helpers init
   window.global = { ...(window.global || {}) }
+  window.global.helpers = { ...(window.global.helpers || {}) }
 
   // Track each rendered component
   const tracker = {
@@ -19,13 +20,8 @@ export const createStore = defaults => {
       tracker.components.add(Component)
       if (tracker.components.size - prevSize === 1) {
         const { helpers } = Component
-        console.log(2222222, helpers);
         if (helpers) {
-          console.log(global, helpers);
-          // FIXME: helpers function in `window.global` should be related to corresponding Components names
-          console.log({helpers: { ...window.global.helpers, ...helpers }},333);
-          window.global = { ...window.global, helpers: { ...window.global.helpers, ...helpers } }
-          console.log(global);
+          window.global.helpers = { ...window.global.helpers, [Component.name]: helpers }
         }
         console.warn('added tracker:',tracker, Component.name, ':',Component)
       }
@@ -35,8 +31,9 @@ export const createStore = defaults => {
       const changedArgs = Object.keys(changes)
       const components = [...tracker.components]
       // FIXME: we should not add rendering methods to tracker if it doesn't contain `args`
+      // FIXME: change rendering order!!! ???
       components.filter(({ args }) => args && changedArgs.some(arg => args.includes(arg))).forEach(item => {
-        console.log('rerender:', item.name)
+        console.log('rerender:', item.name, item(store))
         document.getElementById(item.name).outerHTML = item(store)
       })
     },

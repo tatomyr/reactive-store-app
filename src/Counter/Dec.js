@@ -3,7 +3,7 @@ import { highlight } from '../fakes.js'
 
 const Dec = ({ dislikes }) => `
   <button
-    onclick="global.helpers.decrement()"
+    onclick="global.helpers.Dec.decrement()"
     ${highlight()}
     id="Dec"
   >

@@ -3,7 +3,7 @@ import Likes from './Likes'
 
 const Inc = () => `
   <button
-    onclick="global.helpers.increment()"
+    onclick="global.helpers.Inc.increment()"
   >
     ${Likes}++
   </button>

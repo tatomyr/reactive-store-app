@@ -4,7 +4,7 @@ import Ol from './Ol.js'
 
 // Text list form
 const Texts = () => `
-  <form onsubmit="global.helpers.addItem(event)">
+  <form onsubmit="global.helpers.Texts.addItem(event)">
     <input name="text" />
     <button>Add</button>
     ${Ol}
