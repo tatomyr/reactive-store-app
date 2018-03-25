@@ -16,7 +16,8 @@ export const createStore = defaults => {
     add: (Component, args) => {
       if (args) {
         Component.args = args
-        tracker.components.unshift(Component)
+        const id = tracker.components.unshift(Component)
+        tracker.components[0].id = `$${Component.name}-${id}`
         console.warn('added tracker:', Component.name, tracker.components)
       }
 
@@ -34,19 +35,19 @@ export const createStore = defaults => {
         .filter(({ args }) => changedArgs.some(arg => args.includes(arg)))
         .forEach(Component => {
           console.log('rerender:', Component.name)
-          document.getElementById(Component.name).outerHTML = wrapWithId(Component(store))(Component.name)
+          document.getElementById(Component.id).outerHTML = wrapWithId(Component(store))(Component.id)
         })
     },
   }
 
   // Render a Component with a stored data
-  const wrapWithId = html => name => html.replace(/<[A-z]+(.|\n)*?>/, match => `${match.slice(0, -1)} id="${name}">`)
+  const wrapWithId = html => id => html.replace(/<[A-z]+(.|\n)*?>/, match => `${match.slice(0, -1)} id="${id}">`)
 
   const render = (Component, args) => {
     tracker.add(Component, args)
 
     if (Component.willMount) Component.willMount()
-    return wrapWithId(Component(store))(Component.name)
+    return wrapWithId(Component(store))(Component.id)
   }
 
   // Store mutation
