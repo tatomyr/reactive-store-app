@@ -25,7 +25,8 @@ export const createStore = defaults => {
   }
 
   // Render a Component with a stored data
-  const render = Component => {
+  const render = (Component, args = []) => {
+    Component.args = args
     tracker.add(Component)
 
     return Component(store)

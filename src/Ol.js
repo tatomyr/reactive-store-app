@@ -9,6 +9,4 @@ const Ol = ({ list }) => `
   </ol>
 `
 
-Ol.args = ['list']
-
-export default render(Ol)
+export default render(Ol, ['list'])
