@@ -1,9 +1,9 @@
-import { dispatch, render } from './store-provider.js'
-import { highlight } from './fakes.js'
+import { dispatch, render } from '../store-provider.js'
+import { highlight } from '../fakes.js'
 
 const Dec = ({ dislikes }) => `
   <button
-    onclick="window.decrecment()"
+    onclick="global.helpers.decrement()"
     ${highlight()}
     id="Dec"
   >
@@ -11,10 +11,10 @@ const Dec = ({ dislikes }) => `
   </button>
 `
 
-const decrecment = () => {
+const decrement = () => {
   dispatch(({ dislikes }) => ({ dislikes: dislikes - 1 }))
 }
 
-window.decrecment = decrecment // XXX temporary
+Dec.helpers = { decrement }
 
 export default render(Dec, ['dislikes'])

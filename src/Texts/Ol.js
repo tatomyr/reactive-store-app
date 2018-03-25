@@ -1,4 +1,4 @@
-import { dispatch, render } from './store-provider.js'
+import { dispatch, render } from '../store-provider.js'
 import Waiting from './Waiting.js'
 import { Li } from './Li.js'
 
