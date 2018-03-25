@@ -12,14 +12,12 @@ export const createStore = defaults => {
 
   // Track each rendered component
   const tracker = {
-    components: new Set([]),
+    components: [],
     add: (Component, args) => {
       if (args) {
         Component.args = args
-        // const prevSize = tracker.components.size
-        // Component.index = prevSize
-        tracker.components.add(Component)
-        console.warn('added tracker:', Component.name)
+        tracker.components.unshift(Component)
+        console.warn('added tracker:', Component.name, tracker.components)
       }
 
       const { helpers } = Component
@@ -32,12 +30,10 @@ export const createStore = defaults => {
     },
     rerender: changes => {
       const changedArgs = Object.keys(changes)
-      const components = [...tracker.components]
-      components
+      tracker.components
         .filter(({ args }) => changedArgs.some(arg => args.includes(arg)))
-        .reverse() // this is for right rendering order
         .forEach(item => {
-          console.log('rerender:', item.name, item(store))
+          console.log('rerender:', item.name)
           document.getElementById(item.name).outerHTML = item(store)
         })
     },
