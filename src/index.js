@@ -8,5 +8,5 @@ const mount = app => {
 }
 
 (() => {
-  mount(App)
+  mount(App())
 })()

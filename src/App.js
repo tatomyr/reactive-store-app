@@ -2,10 +2,10 @@ import Texts from './Texts/index.js'
 import Counter from './Counter/index.js'
 
 // Main component (storeless)
-export default `
+export default () => `
   <div>
-    ${Texts}
+    ${Texts()}
     <hr />
-    ${Counter}
+    ${Counter()}
   </div>
 `

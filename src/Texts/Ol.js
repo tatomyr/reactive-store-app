@@ -5,7 +5,7 @@ import { Li } from './Li.js'
 const Ol = ({ list }) => `
   <ol>
     ${list.map(Li).join('')}
-    ${Waiting}
+    ${Waiting()}
   </ol>
 `
 

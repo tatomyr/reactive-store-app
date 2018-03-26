@@ -1,4 +1,4 @@
-import { render, dispatch } from '../store-provider.js'
+import { render, mutate } from '../store-provider.js'
 import { fakeRequest } from '../fakes.js'
 import Ol from './Ol.js'
 
@@ -7,7 +7,7 @@ const Texts = () => `
   <form onsubmit="global.helpers.Texts.addItem(event)">
     <input name="text" />
     <button>Add</button>
-    ${Ol}
+    ${Ol()}
   </form>
 `
 
@@ -17,10 +17,10 @@ const addItem = e => {
   const text = e.target.text.value
   if (text.trim() === '') return null
 
-  dispatch(({ loading }) => ({ loading: loading + 1 }))
+  mutate(({ loading }) => ({ loading: loading + 1 }))
 
   fakeRequest().then(delay => {
-    dispatch(store => ({
+    mutate(store => ({
       loading: store.loading - 1,
       list: [...store.list, `${text} /${delay}/`],
     }))

@@ -43,16 +43,19 @@ export const createStore = defaults => {
   // Render a Component with a stored data
   const wrapWithId = html => id => html.replace(/<[A-z]+(.|\n)*?>/, match => `${match.slice(0, -1)} id="${id}">`)
 
-  // TODO: rewrite render to return a function !!! ???
   const render = (Component, args) => {
     tracker.add(Component, args)
 
     if (Component.willMount) Component.willMount()
-    return wrapWithId(Component(store))(Component.id)
+    // TODO: implement a method to wrap a Component properly
+    return () => wrapWithId(Component(store))(Component.id)
   }
 
+  // TODO: implement support for nested store fields
+  const getTextField = field => render(store => `<span>${store[field]}</span>`, [field])()
+
   // Store mutation
-  const dispatch = callback => {
+  const mutate = callback => {
     const changes = callback(store)
     Object.assign(store, changes)
     console.log('store changes:', changes)
@@ -62,5 +65,5 @@ export const createStore = defaults => {
     return 'TODO'
   }
 
-  return { render, dispatch }
+  return { render, getTextField, mutate }
 }
