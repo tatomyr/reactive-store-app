@@ -9,4 +9,4 @@ const Likes = ({ likes }) => `
   </span>
 `
 
-export default render(Likes, ['likes'])
+export default render(Likes, 'likes')

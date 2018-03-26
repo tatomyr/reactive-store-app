@@ -1,3 +1,7 @@
 div {
   border: 1px dashed orange;
 }
+
+.hidden {
+  display: none;
+}

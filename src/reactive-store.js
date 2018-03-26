@@ -19,13 +19,14 @@ export const createStore = defaults => {
   const tracker = {
     components: [],
     add: (Component, args) => {
-      if (args) {
+      if (args.length) {
         Component.args = args
         const id = tracker.components.unshift(Component)
         tracker.components[0].id = `$${Component.name}-${id}`
         console.warn('added tracker:', Component.name, tracker.components)
       }
 
+      // TODO: delete it and implement global helpers store (maybe action/reducer pattern?)
       const { helpers } = Component
       if (helpers) {
         window.global.helpers = { ...window.global.helpers, [Component.name]: helpers }
@@ -40,27 +41,31 @@ export const createStore = defaults => {
         .filter(({ args }) => changedArgs.some(arg => args.includes(arg)))
         .forEach(component => {
           console.log('rerender:', component.name)
-          document.getElementById(component.id).outerHTML = wrapWithId(component(store))(component.id)
+          if (component.willRefresh) component.willRefresh(store)
+          document.getElementById(component.id).outerHTML = wrapWithId(component)
         })
     },
   }
 
-  // Render a Component with a stored data
-  const wrapWithId = html => id => html.replace(/<[A-z]+(.|\n)*?>/, match => `${match.slice(0, -1)} id="${id}">`)
+  const wrapWithId = Component => Component.id
+    ? Component(store)
+      .trim()
+      .replace(/<[A-z]+(.|\n)*?>/, match => `${match.slice(0, -1)} id="${Component.id}">`)
+    : Component(store).trim()
 
   /**
    * Returns funcion to be invoked
    *
    * @param Component - a function that retuns a string which represents a valid html tag with its content
-   * @param args - an optional array of arguments (specifically they are the store fields). If not set - the Component will not rerender later on
+   * @param ...args - an optional list of arguments (specifically they are the store fields). If not any - the Component will not rerender later on
    * @return function to be invoked later on
    */
-  const render = (Component, args) => {
+  const render = (Component, ...args) => {
     tracker.add(Component, args)
 
-    if (Component.willMount) Component.willMount()
+    if (Component.willMount) Component.willMount(store)
     // TODO: implement a method to wrap a Component properly
-    return () => wrapWithId(Component(store))(Component.id)
+    return () => wrapWithId(Component) 
   }
 
   /**
@@ -70,7 +75,7 @@ export const createStore = defaults => {
    * @return string
    */
   // TODO: implement support for nested store fields
-  const renderTextField = field => render(store => `<span>${store[field]}</span>`, [field])()
+  const renderTextField = field => render(store => `<span>${store[field]}</span>`, field)()
 
   /**
    * Store mutation method
@@ -89,3 +94,5 @@ export const createStore = defaults => {
 
   return { render, renderTextField, mutate }
 }
+
+// TODO: implement routing

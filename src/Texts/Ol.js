@@ -9,4 +9,4 @@ const Ol = ({ list }) => `
   </ol>
 `
 
-export default render(Ol, ['list'])
+export default render(Ol, 'list')
