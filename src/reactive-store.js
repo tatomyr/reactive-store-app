@@ -1,6 +1,11 @@
 console.log('triggered reactive store file')
 
-// Store module
+/**
+ * Store module constructor that should be invoked once to create a singleton with reactive data
+ *
+ * @param defaults - an object that should contain init values for the store
+ * @return an object that contains public methods to manage the store created
+ */
 export const createStore = defaults => {
   // Store
   const store = { ...defaults }
@@ -33,9 +38,9 @@ export const createStore = defaults => {
       const changedArgs = Object.keys(changes)
       tracker.components
         .filter(({ args }) => changedArgs.some(arg => args.includes(arg)))
-        .forEach(Component => {
-          console.log('rerender:', Component.name)
-          document.getElementById(Component.id).outerHTML = wrapWithId(Component(store))(Component.id)
+        .forEach(component => {
+          console.log('rerender:', component.name)
+          document.getElementById(component.id).outerHTML = wrapWithId(component(store))(component.id)
         })
     },
   }
@@ -43,6 +48,13 @@ export const createStore = defaults => {
   // Render a Component with a stored data
   const wrapWithId = html => id => html.replace(/<[A-z]+(.|\n)*?>/, match => `${match.slice(0, -1)} id="${id}">`)
 
+  /**
+   * Returns funcion to be invoked
+   *
+   * @param Component - a function that retuns a string which represents a valid html tag with its content
+   * @param args - an optional array of arguments (specifically they are the store fields). If not set - the Component will not rerender later on
+   * @return function to be invoked later on
+   */
   const render = (Component, args) => {
     tracker.add(Component, args)
 
@@ -51,10 +63,20 @@ export const createStore = defaults => {
     return () => wrapWithId(Component(store))(Component.id)
   }
 
+  /**
+   * Returns a text field value wrapped in <span> tag
+   *
+   * @param field - a string name of a field to be rendered
+   * @return string
+   */
   // TODO: implement support for nested store fields
-  const getTextField = field => render(store => `<span>${store[field]}</span>`, [field])()
+  const renderTextField = field => render(store => `<span>${store[field]}</span>`, [field])()
 
-  // Store mutation
+  /**
+   * Store mutation method
+   *
+   * @param callback - a callback function that will take the store as a single argunent and retuns an object that represents store changes
+   */
   const mutate = callback => {
     const changes = callback(store)
     Object.assign(store, changes)
@@ -65,5 +87,5 @@ export const createStore = defaults => {
     return 'TODO'
   }
 
-  return { render, getTextField, mutate }
+  return { render, renderTextField, mutate }
 }

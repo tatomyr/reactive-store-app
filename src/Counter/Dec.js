@@ -1,4 +1,4 @@
-import { render, getTextField, mutate } from '../store-provider.js'
+import { render, renderTextField, mutate } from '../store-provider.js'
 import { highlight } from '../fakes.js'
 
 // TODO: investigate why this causes error on outerHTML - thats because duplicated args !!!!!!!!!
@@ -9,7 +9,7 @@ const Dec = ({ dislikes }) => `
     onclick="global.helpers.Dec.decrement()"
     ${highlight()}
   >
-    ${getTextField('dislikes')}--
+    ${renderTextField('dislikes')}--
   </button>
 `
 
