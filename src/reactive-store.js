@@ -43,6 +43,7 @@ export const createStore = defaults => {
   // Render a Component with a stored data
   const wrapWithId = html => id => html.replace(/<[A-z]+(.|\n)*?>/, match => `${match.slice(0, -1)} id="${id}">`)
 
+  // TODO: rewrite render to return a function !!! ???
   const render = (Component, args) => {
     tracker.add(Component, args)
 
