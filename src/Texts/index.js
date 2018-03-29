@@ -29,4 +29,5 @@ const addItem = e => {
 
 Texts.helpers = { addItem }
 
+// TODO what exactly does render method do here?
 export default render(Texts)

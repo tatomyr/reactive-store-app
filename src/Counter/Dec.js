@@ -20,3 +20,5 @@ const decrement = () => {
 Dec.helpers = { decrement }
 
 export default render(Dec /* We should not wrap one render inside an other with args * , ['dislikes'] /* */)
+
+// TODO investigate why lambda functions are rendered multiple times while named functions aren't
